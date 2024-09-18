@@ -14,7 +14,7 @@
 *     copyright notice, this list of conditions and the following
 *     disclaimer in the documentation and/or other materials provided
 *     with the distribution.
-*   * Neither the name of the Willow Garage nor the names of its
+*   * Neither the name of the copyright holder nor the names of its
 *     contributors may be used to endorse or promote products derived
 *     from this software without specific prior written permission.
 * 
@@ -47,7 +47,6 @@ class CameraThrottleNodelet : public nodelet::Nodelet
   image_transport::CameraSubscriber sub_;
   image_transport::CameraPublisher pub_;
 
-  int skip_;
   int n_;
 
   // Dynamic reconfigure
@@ -73,8 +72,6 @@ void CameraThrottleNodelet::onInit()
   it_in_ .reset(new image_transport::ImageTransport(nh_in));
   it_out_.reset(new image_transport::ImageTransport(nh_out));
 
-  // Read parameters
-  private_nh.param("skip", skip_, 2);
   n_ = 0;
 
   // Set up dynamic reconfigure
@@ -84,7 +81,7 @@ void CameraThrottleNodelet::onInit()
   pub_ = it_out_->advertiseCamera("camera_out",  1);
 
   image_transport::TransportHints sub_hints("raw", ros::TransportHints(), private_nh);
-  sub_ = it_in_->subscribeCamera("camera_in", 1, &CameraThrottleNodelet::cameraCb, this, sub_hints);
+  sub_ = it_in_->subscribeCamera("camera", 1, &CameraThrottleNodelet::cameraCb, this, sub_hints);
 }
 
 void CameraThrottleNodelet::cameraCb(const sensor_msgs::ImageConstPtr& image_msg,
@@ -93,7 +90,7 @@ void CameraThrottleNodelet::cameraCb(const sensor_msgs::ImageConstPtr& image_msg
   if (!n_)
     pub_.publish(image_msg, info_msg);
 
-  n_ = (n_+1) % skip_;
+  n_ = (n_+1) % config_.skip;
 }
 
 void CameraThrottleNodelet::configCb(Config &config, uint32_t level)
