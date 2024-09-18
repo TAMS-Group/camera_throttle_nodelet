@@ -79,7 +79,6 @@ void CameraThrottleNodelet::onInit()
 
   // Set up dynamic reconfigure
   reconfigure_server_.reset(new ReconfigureServer(private_nh));
-  ReconfigureServer::CallbackType f = boost::bind(&CameraThrottleNodelet::configCb, this, boost::placeholders::_1, boost::placeholders::_2);
   reconfigure_server_->setCallback([this](auto& cfg, auto lvl){ configCb(cfg, lvl); });
 
   pub_ = it_out_->advertiseCamera("camera_out",  1);
