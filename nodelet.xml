@@ -1,0 +1,9 @@
+<library path="libcamera_throttle_nodelet">
+ <class name="camera_throttle_nodelet/CameraThrottle"
+          type="camera_throttle_nodelet::CameraThrottleNodelet"
+          base_class_type="nodelet::Nodelet">
+      <description>
+         Nodelet to throttle the rate of camera streams.
+      </description>
+ </class>
+</library>
