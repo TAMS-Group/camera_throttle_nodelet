@@ -90,8 +90,10 @@ void CameraThrottleNodelet::onInit()
 void CameraThrottleNodelet::cameraCb(const sensor_msgs::ImageConstPtr& image_msg,
                                   const sensor_msgs::CameraInfoConstPtr& info_msg)
 {
-  if (!n_++)
+  if (!n_)
     pub_.publish(image_msg, info_msg);
+
+  n_ = (n_+1) % skip_;
 }
 
 void CameraThrottleNodelet::configCb(Config &config, uint32_t level)
